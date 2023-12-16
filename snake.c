@@ -1,5 +1,6 @@
 #include <curses.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 void main() {
 	WINDOW* win = initscr();
@@ -34,10 +35,10 @@ void main() {
 		}
 		posX += dirX;
 		posY += dirY;
-		printw("x: %d y:%d\n", posX, posY);
 		erase();
 		mvaddstr(posY, posX, "*");
 		mvaddstr(foodY, foodX, "&");
+		usleep(100000);
 	}
 
 	endwin();
