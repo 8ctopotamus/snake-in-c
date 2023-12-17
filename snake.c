@@ -89,7 +89,8 @@ void print_board() {
 
 	clear_screen();
 
-	printf("SNAKE\nw,a,s,d to move. q to quit\n\n");
+	printf("SNAKE | w,a,s,d to move. q to quit\n");
+	printf("Score: %d\n", snake.length * 100);
 
 	for (y = 0; y < rows; y++) {
 		for (x = 0; x < cols; x++) {
@@ -98,7 +99,6 @@ void print_board() {
 		putchar('\n');
 	}
 
-	printf("Score: %d\n", snake.length * 100);
 	printf("%d %d\n", snake.parts[0].x, snake.parts[0].y);
 	printf("%d %d\n", snake.parts[1].x, snake.parts[1].y);
 	printf("%d %d\n", snake.parts[2].x, snake.parts[2].y);
@@ -124,21 +124,67 @@ void setup_food() {
 	}
 }
 
-int main(int argc, char **argv) {
-	srand(time(0));
-
-	snake.length = 3;
+void setup_snake() {
+	snake.length = 1;
 	snake.parts[0].x = rand() % (cols - 2);
 	snake.parts[0].y = rand() % (rows - 2);
+}
 
+void game_rules() {
+	int i;
+
+	// consume food
+	for (i = 0; i < foods; i++) {
+		if ( !food[i].consumed &&
+			// snake is head on a piece of food
+			food[i].x == snake.parts[0].x && 
+			food[i].y == snake.parts[0].y
+		) {
+			food[i].consumed = 1;
+			snake.length++;
+		}
+
+		// snake head is touching wall
+		if ( snake.parts[0].x == 0 || snake.parts[0].x == cols-1 ||
+			   snake.parts[0].y == 0 || snake.parts[0].y == rows-1 ) {
+			isGameOver = 1;
+		}
+	}
+}
+
+void game_over() {
+	
+}
+
+int main(int argc, char **argv) {
+	srand(time(0));
+	
+	setup_snake();
 	setup_food();
 
 	while (!isGameOver) {
 		fill_board();
 		draw_food();
 		draw_snake();
+		game_rules();
 		print_board();
-		read_keyboard();
+		if (!isGameOver) {
+			read_keyboard();
+		}
 	}
+
+	printf("Game over, Final score: %d\n", snake.length * 100);
+	printf("r to replay, q to quit\n");
+	char c;
+	while(1) {
+		c = getch();
+		if (c == 'r') {
+			printf("TODO: replay");
+			break;
+		} else if (c == 'q') {
+			exit(EXIT_SUCCESS);
+		}
+	};
+
 	return 0;
 }
