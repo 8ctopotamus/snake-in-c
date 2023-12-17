@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define cols 20
 #define rows 20
@@ -124,15 +125,11 @@ void setup_food() {
 }
 
 int main(int argc, char **argv) {
-	// srand(time(0));
+	srand(time(0));
 
 	snake.length = 3;
-	snake.parts[0].x = 5;
-	snake.parts[0].y = 5;
-	snake.parts[1].x = 5;
-	snake.parts[1].y = 6;
-	snake.parts[2].x = 5;
-	snake.parts[2].y = 7;
+	snake.parts[0].x = rand() % (cols - 2);
+	snake.parts[0].y = rand() % (rows - 2);
 
 	setup_food();
 
