@@ -33,7 +33,7 @@ struct Snake snake;
 void draw_snake() {
 	int i;
 	// body
-	for (i = snake.length - 1; i > 0; i--) {
+	for (i = snake.length-1; i > 0; i--) {
 		board[snake.parts[i].y * cols + snake.parts[i].x] = '*';
 	}
 	// head
@@ -43,7 +43,7 @@ void draw_snake() {
 void move_snake(int deltaX, int deltaY) {
 	// body
 	int i;
-	for (i = snake.length - 1; i > 0; i--) {
+	for (i = snake.length-1; i > 0; i--) {
 		snake.parts[i] = snake.parts[i - 1];
 	}
 	// head
@@ -99,6 +99,17 @@ void print_board() {
 		putchar('\n');
 	}
 
+	int i;
+	printf("headX: %d headY %d\n", snake.parts[0].x, snake.parts[0].y);
+
+	for (i = 0; i < snake.length; i++) {
+		printf("bodyX: %d bodyY %d\n", snake.parts[i].x, snake.parts[i].y);
+		if ( snake.parts[0].x == snake.parts[i].x && 
+				 snake.parts[0].y == snake.parts[i].y ) {
+			printf("BODY HIT\n");
+		}
+	}
+
 	printf("%d %d\n", snake.parts[0].x, snake.parts[0].y);
 	printf("%d %d\n", snake.parts[1].x, snake.parts[1].y);
 	printf("%d %d\n", snake.parts[2].x, snake.parts[2].y);
@@ -135,25 +146,45 @@ void game_rules() {
 
 	// consume food
 	for (i = 0; i < foods; i++) {
-		if ( !food[i].consumed &&
-			// snake is head on a piece of food
-			food[i].x == snake.parts[0].x && 
-			food[i].y == snake.parts[0].y
-		) {
-			food[i].consumed = 1;
-			snake.length++;
+		if (!food[i].consumed) {
+			if ( // snake is head on a piece of food
+				food[i].x == snake.parts[0].x && 
+				food[i].y == snake.parts[0].y
+			) {
+				food[i].consumed = 1;
+				snake.length++;
+			}
 		}
+	}
+	
+	// wall hit
+	if ( snake.parts[0].x == 0 || snake.parts[0].x == cols-1 ||
+			 snake.parts[0].y == 0 || snake.parts[0].y == rows-1 ) {
+		isGameOver = 1;
+	}
 
-		// snake head is touching wall
-		if ( snake.parts[0].x == 0 || snake.parts[0].x == cols-1 ||
-			   snake.parts[0].y == 0 || snake.parts[0].y == rows-1 ) {
+	// body hit
+	for (i = 1; i < snake.length; i++) {
+		if ( snake.parts[0].x == snake.parts[i].x && 
+				 snake.parts[0].y == snake.parts[i].y ) {
 			isGameOver = 1;
 		}
 	}
 }
 
 void game_over() {
-	
+	printf("Game over, Final score: %d\n", snake.length * 100);
+	printf("r to replay, q to quit\n");
+	char c;
+	while(1) {
+		c = getch();
+		if (c == 'r') {
+			printf("TODO: replay");
+			break;
+		} else if (c == 'q') {
+			exit(EXIT_SUCCESS);
+		}
+	};
 }
 
 int main(int argc, char **argv) {
@@ -173,18 +204,7 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	printf("Game over, Final score: %d\n", snake.length * 100);
-	printf("r to replay, q to quit\n");
-	char c;
-	while(1) {
-		c = getch();
-		if (c == 'r') {
-			printf("TODO: replay");
-			break;
-		} else if (c == 'q') {
-			exit(EXIT_SUCCESS);
-		}
-	};
+	game_over();
 
 	return 0;
 }
