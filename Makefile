@@ -1,4 +1,4 @@
 all: build
 
 build: snake.c
-	cc snake.c -lncurses -o snake
+	cc snake.c -o snake
