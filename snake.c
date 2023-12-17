@@ -88,6 +88,8 @@ void print_board() {
 
 	clear_screen();
 
+	printf("SNAKE\nw,a,s,d to move. q to quit\n\n");
+
 	for (y = 0; y < rows; y++) {
 		for (x = 0; x < cols; x++) {
 			putchar(board[y * cols + x]);
@@ -95,7 +97,7 @@ void print_board() {
 		putchar('\n');
 	}
 
-	printf("length: %d\n", snake.length);
+	printf("Score: %d\n", snake.length * 100);
 	printf("%d %d\n", snake.parts[0].x, snake.parts[0].y);
 	printf("%d %d\n", snake.parts[1].x, snake.parts[1].y);
 	printf("%d %d\n", snake.parts[2].x, snake.parts[2].y);
