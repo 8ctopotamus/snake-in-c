@@ -16,7 +16,7 @@ struct SnakePart {
 
 struct Snake {
 	int length;
-	struct SnakePart part[SNAKE_MAX_LENGTH];
+	struct SnakePart parts[SNAKE_MAX_LENGTH];
 };
 
 struct Snake snake;
@@ -25,15 +25,21 @@ void draw_snake() {
 	int i;
 	// body
 	for (i = snake.length - 1; i > 0; i--) {
-		board[snake.part[i].y * cols + snake.part[i].x] = '*';
+		board[snake.parts[i].y * cols + snake.parts[i].x] = '*';
 	}
 	// head
-	board[snake.part[0].y * cols + snake.part[0].x] = '@';
+	board[snake.parts[0].y * cols + snake.parts[0].x] = '@';
 }
 
 void move_snake(int deltaX, int deltaY) {
-	snake.part[0].x += deltaX;
-	snake.part[0].y += deltaY;
+	// body
+	int i;
+	for (i = snake.length - 1; i > 0; i--) {
+		snake.parts[i] = snake.parts[i - 1];
+	}
+	// head
+	snake.parts[0].x += deltaX;
+	snake.parts[0].y += deltaY;
 }
 
 void fill_board() {
@@ -75,7 +81,6 @@ void print_board() {
 
 void read_keyboard() {
 	int ch = getch();
-	printf("%d", ch == 'w');
 	switch(ch) {
 		case 'w': move_snake( 0,-1); break;
 		case 's': move_snake( 0, 1); break;
@@ -87,9 +92,13 @@ void read_keyboard() {
 
 int main(int argc, char **argv) {
 	
-	snake.length = 1;
-	snake.part[0].x = 5;
-	snake.part[0].y = 5;
+	snake.length = 3;
+	snake.parts[0].x = 5;
+	snake.parts[0].y = 5;
+	snake.parts[1].x = 5;
+	snake.parts[1].y = 6;
+	snake.parts[2].x = 5;
+	snake.parts[2].y = 7;
 
 	while (!isGameOver) {
 		fill_board();
