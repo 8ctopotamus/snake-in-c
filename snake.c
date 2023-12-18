@@ -6,7 +6,7 @@
 #define cols 20
 #define rows 20
 #define SNAKE_MAX_LENGTH 256
-#define foods 10
+#define foods 50
 
 int isGameOver = 0;
 
